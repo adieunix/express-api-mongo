@@ -1,13 +1,28 @@
 const MongoClient = require('mongodb').MongoClient;
-const url = 'mongodb://localhost:27017';
-const dbName = 'oomph';
 
-const connection = MongoClient.connect(url, {useNewUrlParser: true}, function(err, client) {
-  console.log("Connected successfully to MongoDB server");
+var state = {
+    db: null,
+}
 
-  const db = client.db(dbName);
+exports.connect = function(url, done) {
+    if (state.db) return done();
 
-  client.close();
-});
+    MongoClient.connect(url, function(err, db) {
+        if (err) return done(err);
+        state.db = db;
+        done();
+    })
+}
 
-module.exports = connection;
+exports.get = function() {
+    return state.db;
+}
+
+exports.close = function() {
+    if (state.db) {
+        state.db.close(function(err, result) {
+            state.db = null;
+            state.mode = null;
+        })
+    }
+}

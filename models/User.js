@@ -1,11 +1,19 @@
-const db = require('../dbconnection'); //reference of dbconnection.js
-const mongo = require('../mongodb');
+//const db = require('../dbconnection'); //reference of dbconnection.js
+const db = require('../mongodb');
 const md5 = require('md5');
 
 const User = {
+    
+    createCollection: function(name, callback) {
+        return db.get().createCollection("users");
+    },
 
-    getAllUsers: function(start,limit,callback) {
-        return db.query("SELECT * FROM api_users LIMIT ?,?", [start,limit], callback);
+    getAllUsers: function(callback) {
+        var collection = db.get().collection('user');
+        collection.find().toArray(function(err, docs) {
+            console.log('USER', docs);
+            return docs;
+        });
     },
     
     getUserById: function(id, callback) {

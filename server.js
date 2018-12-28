@@ -1,5 +1,6 @@
 const app = require('./app');
 const port = 3000;
+const db = require('./mongodb');
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -19,4 +20,11 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-app.listen(port, () => console.log('Server listening on port '+port+'!'));
+db.connect('mongodb://localhost:27017/oomph', function(err) {
+    if (err) {
+        console.log('Unable to connect to Mongo.')
+        process.exit(1)
+    } else {
+        app.listen(port, () => console.log('Server listening on port '+port+'!'));
+    }
+});
