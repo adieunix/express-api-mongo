@@ -1,5 +1,5 @@
 ### NodeJS / Express / MongoDB
-A simple way to build express restful api and mysql server.
+A simple way to build express restful api and MongoDB server.
 1. Run `npm install` first to initiate node modules
 2. Running server: `node server`
 3. Browse url on port **3000**
@@ -7,11 +7,11 @@ A simple way to build express restful api and mysql server.
 ### URI Routing
 Query string of URL to request and handling each params
 
-`localhost:3000/controller/method?key=<api_key>&params=<params>`
+`localhost:3000/controller/method?params=<params>`
 
 **example :**
 
-`http://localhost:3000/users/get_all_users?key=keyfordevelopment&start=0&limit=10`
+`http://localhost:3000/users/get_all_users?start=0&limit=10`
 
 ### Route / Method
 Define your methods depends on controller name
@@ -21,9 +21,6 @@ Define your methods depends on controller name
 `User.js` : **get_all_users** / **get_user** / **update_user**
 
 `Task.js` : **get_all_tasks** / **get_task_by_id**
-
-### Models
-Same as route, you have to create each of models depends on controller name
 
 ### App.js
 Set up your controller name into **App.js**
