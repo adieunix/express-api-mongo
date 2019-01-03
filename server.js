@@ -1,6 +1,6 @@
 const app = require('./app');
 const port = 3000;
-const db = require('./mongodb');
+const db = require('./helpers/Connection');
 const constant = require('./helpers/Constants');
 
 // catch 404 and forward to error handler

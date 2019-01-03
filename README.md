@@ -18,18 +18,18 @@ Define your methods depends on controller name
 
 **example**
 
-`User.js` : **get_all_users** / **get_user** / **update_user**
+`User.js` : **get_all_users** / **add_user** / **update_user**
 
 `Task.js` : **get_all_tasks** / **get_task_by_id**
 
+### Models
+Same as route, you have to create each of models depends on controller name
+
+### Helpers
+Simplify your codes using constant helpers and redefine into each methods. Also create your libraries into libraries.js. For database connection, we use connection helper to declare each methods (connect, get and close)
+
 ### App.js
 Set up your controller name into **App.js**
-
-### Constant.js
-Simplify your codes using constant helpers and redefine into each methods. 
-
-### Mongodb.js
-Configure your connection to Mongo server instance. 
 
 ___
 

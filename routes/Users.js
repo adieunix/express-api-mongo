@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const constant = require('../helpers/Constants');
-const db = require('../mongodb');
 const Model = require('../models/Users');
 const Lib = require('../helpers/Libraries');
 

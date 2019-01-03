@@ -1,4 +1,4 @@
-const db = require('../mongodb');
+const db = require('./Connection');
 
 const Lib = {
     
