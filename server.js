@@ -23,7 +23,7 @@ app.use(function(err, req, res, next) {
 
 db.connect(constant.DB_SERVER, function(err) {
     if (err) {
-        console.log('Unable to connect to Mongo.')
+        console.log('Unable to connect to Mongo.',err)
         process.exit(1)
     } else {
         app.listen(port, () => console.log('Server listening on port '+port+'!'));
