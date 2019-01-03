@@ -3,6 +3,22 @@ const router = express.Router();
 const constant = require('../helpers/Constants');
 const db = require('../mongodb');
 
+/* Generate ID auto_integer */
+var sequenceDocument = (sequenceName) => {
+    return new Promise((resolve, reject) => {
+        db.get().collection('counters').findAndModify(
+            { _id: sequenceName },     // query
+            [],               // represents a sort order if multiple matches
+            { $inc:{sequence_value:1} },   // update statement
+            { new: true },    // options - new to return the modified document
+            function(err,doc) {
+                if (err) reject(err);
+                resolve(doc.value.sequence_value);
+            }
+        );
+    });
+}
+
 /* Mongo Test */
 router.get('/mongo', function(req, res, next) {
     var collection = db.get().collection('user');
@@ -23,8 +39,9 @@ router.get(constant.API_CREATE_COLL+'/:name', function(req, res, next) {
 });
 
 /* Add User */
-router.post(constant.API_ADD_USER, function(req,res,next) {
+router.post(constant.API_ADD_USER, async function(req,res,next) {
     var dat = {
+        _id: await (sequenceDocument('user')),
         name: req.body.name,
         email: req.body.email
     }
