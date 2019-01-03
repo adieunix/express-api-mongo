@@ -15,6 +15,11 @@ const User = {
         return db.get()
             .collection('user')
             .insertOne(data, callback);
+    },
+    
+    createColl: function(name,callback) {
+        return db.get()
+            .createCollection(name, callback);
     }
     
 }

@@ -2,53 +2,27 @@ const express = require('express');
 const router = express.Router();
 const constant = require('../helpers/Constants');
 const db = require('../mongodb');
-const User = require('../models/Users');
-
-/* Generate ID auto_integer */
-var sequenceDocument = (sequenceName) => {
-    return new Promise((resolve, reject) => {
-        db.get().collection('counters').findAndModify(
-            { _id: sequenceName },     // query
-            [],               // represents a sort order if multiple matches
-            { $inc:{sequence_value:1} },   // update statement
-            { new: true },    // options - new to return the modified document
-            function(err,doc) {
-                if (err) reject(err);
-                resolve(doc.value.sequence_value);
-            }
-        );
-    });
-}
-
-/* Mongo Test */
-router.get('/mongo', function(req, res, next) {
-    var collection = db.get().collection('user');
-    collection.find().toArray(function(err, docs) {
-        console.log('USER', docs)
-    });
-    res.json('Test Mongo!');
-});
+const Model = require('../models/Users');
+const Lib = require('../helpers/Libraries');
 
 /* Create Collection */
 router.get(constant.API_CREATE_COLL+'/:name', function(req, res, next) {
-    db.get().createCollection(req.params.name, function(errx, resx) {
-        console.log(resx);
-        if (errx) throw errx;
+    Model.createColl(req.params.name, function(err, result) {
+        if (err) throw err;
         res.render('error', { message: 'Collection created!', error: {status: '', stack: 'name: '+req.params.name} });
-        db.close();
-    })
+    });
 });
 
 /* Add User */
 router.post(constant.API_ADD_USER, async function(req,res,next) {
     var arr = [];
     var dat = {
-        _id: await (sequenceDocument('user')),
+        _id: await (Lib.sequenceDoc('user')),
         name: req.body.name,
         email: req.body.email
     }
     
-    User.addUser(dat,function(errx, result) {
+    Model.addUser(dat,function(errx, result) {
         if (errx) throw errx;
         arr.push({
             data: result.ops,
@@ -66,7 +40,7 @@ router.get(constant.API_GET_ALL_USERS, function(req, res, next) {
         limit: (req.query.limit) ? req.query.limit : 0
     }    
     
-    User.getAllUsers(
+    Model.getAllUsers(
         Number(par.start),
         Number(par.limit),
         function(err, result) {
