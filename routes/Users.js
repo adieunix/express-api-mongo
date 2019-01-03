@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const constant = require('../helpers/Constants');
 const db = require('../mongodb');
+const User = require('../models/Users');
 
 /* Generate ID auto_integer */
 var sequenceDocument = (sequenceName) => {
@@ -40,29 +41,39 @@ router.get(constant.API_CREATE_COLL+'/:name', function(req, res, next) {
 
 /* Add User */
 router.post(constant.API_ADD_USER, async function(req,res,next) {
+    var arr = [];
     var dat = {
         _id: await (sequenceDocument('user')),
         name: req.body.name,
         email: req.body.email
     }
-    db.get().collection('user').insertOne(dat, function(errx, result) {
+    
+    User.addUser(dat,function(errx, result) {
         if (errx) throw errx;
-        console.log("1 document inserted",result.insertedId);
-        res.json(result.insertedId);
+        arr.push({
+            data: result.ops,
+            count: result.insertedCount,
+            id: result.insertedId
+        });
+        res.json(arr);
     });
 });
 
 /* Get All Users */
 router.get(constant.API_GET_ALL_USERS, function(req, res, next) {
-    console.log('GET START: ',req.query.start);
     var par = {
         start: (req.query.start) ? req.query.start : 0,
         limit: (req.query.limit) ? req.query.limit : 0
-    }
-    db.get().collection('user').find().skip(Number(par.start)).limit(Number(par.limit)).toArray(function(err, result) {
-        if (err) throw err;
-        res.json(result);
-    });
+    }    
+    
+    User.getAllUsers(
+        Number(par.start),
+        Number(par.limit),
+        function(err, result) {
+            if (err) throw err;
+            res.json(result);    
+        }
+    );
 });
 
 
